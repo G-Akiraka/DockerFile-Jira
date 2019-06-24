@@ -1,0 +1,23 @@
+FROM openjdk:11-jdk
+
+# 设置ENV
+ENV SRC_PATH="/usr/local/src"
+ENV Jira_Start="/opt/atlassian/jira/bin"
+ENV Jira_Crack_PATH="/opt/atlassian/jira/atlassian-jira/WEB-INF/lib/"
+
+# 下载 jira与破解补丁
+RUN git clone https://github.com/G-Akiraka/DockerFile-Jira.git /usr/local/src
+WORKDIR $SRC_PATH
+RUN wget https://product-downloads.atlassian.com/software/jira/downloads/atlassian-jira-software-8.2.2-x64.bin
+RUN sh -c '/bin/echo -e "\n2\n\n\n\n\n\n\ny\ni\nn\n" | /bin/bash atlassian-jira-software-8.2.2-x64.bin'
+# 复制破解补丁到指定目录
+RUN /bin/cp -f mysql-connector-java-5.1.42.jar $Jira_Crack_PATH \
+    && /bin/cp -f atlassian-extras-3.2.jar $Jira_Crack_PATH
+# 删除不需要的安装文件
+RUN rm -rf $SRC_PATH/*
+
+# 配置端口
+EXPOSE 8080
+
+# 启动 Jira
+CMD ["/opt/atlassian/jira/bin/start-jira.sh", "-fg"]
