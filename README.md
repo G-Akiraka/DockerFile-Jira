@@ -1,5 +1,6 @@
 # DockerFile-Jira
 安装jira8.2.2破解
+```
 jira:
     image: jira:v8.2.2
     container_name: jira
@@ -9,3 +10,4 @@ jira:
       - /data/jira/logs:/opt/atlassian/jira/logs
     ports:
       - "8080:8080"
+```
